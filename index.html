@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>原型：SkyClaw设置改版 + SkyClaw记忆</title>
+<title>原型 v2：SkyClaw设置改版（弹窗内编辑）</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,7 +14,7 @@ body {
   font-size: 14px;
 }
 
-/* ─── 原型导航栏 ───────────────────────────────── */
+/* ─── 原型导航栏 ────────────────────────────────── */
 .proto-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
   background: #0f0f23; padding: 7px 14px;
@@ -29,25 +29,24 @@ body {
 .proto-nav button:hover { background: #2a2a4a; color: white; }
 .proto-nav button.active { background: #5c5ce0; border-color: #5c5ce0; color: white; }
 
-/* ─── 屏幕切换 ────────────────────────────────── */
+/* ─── 屏幕切换 ──────────────────────────────────── */
 #app { margin-top: 36px; }
 .screen { display: none; }
 .screen.active { display: block; }
 
-/* ─── Skywork 背景 ────────────────────────────── */
+/* ─── Skywork 背景 ──────────────────────────────── */
 .sw-bg {
   display: flex; min-height: calc(100vh - 36px);
   background: white;
 }
 
-/* 左侧边栏 */
 .sw-sidebar {
   width: 210px; background: #fafafa; border-right: 1px solid #ebebeb;
   padding: 14px 10px; flex-shrink: 0;
 }
 .sw-logo {
   display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; margin-bottom: 16px; cursor: pointer;
+  padding: 6px 8px; margin-bottom: 16px;
 }
 .sw-logo-icon {
   width: 28px; height: 28px; border-radius: 7px;
@@ -58,27 +57,20 @@ body {
 .sw-logo-text { font-size: 17px; font-weight: 700; }
 .sw-nav-item {
   display: flex; align-items: center; gap: 8px;
-  padding: 7px 10px; border-radius: 7px; cursor: pointer;
+  padding: 7px 10px; border-radius: 7px;
   font-size: 13px; color: #555; margin-bottom: 1px;
 }
-.sw-nav-item:hover { background: #f0f0f0; }
 .sw-nav-item.active { background: #efefef; color: #1a1a1a; font-weight: 500; }
 .sw-nav-section { font-size: 11px; color: #bbb; padding: 10px 10px 5px; font-weight: 500; }
 .sw-nav-sub {
-  display: flex; align-items: center; gap: 7px;
-  padding: 5px 10px; border-radius: 6px; cursor: pointer;
+  padding: 5px 10px; border-radius: 6px;
   font-size: 12px; color: #888; margin-bottom: 1px;
 }
-.sw-nav-sub:hover { background: #f0f0f0; }
-
-/* 主内容区 */
 .sw-main {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   padding: 32px 24px; position: relative;
 }
-
-/* SkyClaw 问候区 */
 .sc-greeting { text-align: center; margin-bottom: 28px; }
 .sc-greeting .sc-av {
   width: 60px; height: 60px; border-radius: 50%;
@@ -88,8 +80,6 @@ body {
 }
 .sc-greeting h2 { font-size: 16px; font-weight: 500; color: #888; }
 .sc-greeting h1 { font-size: 26px; font-weight: 700; }
-
-/* 输入框（背景用） */
 .sc-input-bg {
   width: 100%; max-width: 680px;
   border: 1px solid #e5e5e5; border-radius: 14px;
@@ -101,26 +91,13 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   padding-top: 10px; border-top: 1px solid #f5f5f5;
 }
-.sc-mode-pills { display: flex; gap: 6px; margin: 24px 0 0; flex-wrap: wrap; justify-content: center; }
-.sc-pill {
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  padding: 10px 14px; border-radius: 10px; cursor: pointer;
-  font-size: 12px; color: #555;
-}
-.sc-pill:hover { background: #f5f5f5; }
-.sc-pill .pi { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-.sc-pill.sel { color: #5c5ce0; }
-.sc-pill.sel .pi { background: #5c5ce0; color: white; }
-
-/* 顶部右侧操作栏（简化） */
 .sw-topbar {
   position: absolute; top: 14px; right: 20px;
   display: flex; align-items: center; gap: 12px;
 }
-.sw-topbar .tb-icon { color: #888; font-size: 16px; cursor: pointer; }
-.sw-topbar .tb-coin { font-size: 12px; color: #888; background: #f5f5f5; padding: 4px 8px; border-radius: 6px; }
+.tb-coin { font-size: 12px; color: #888; background: #f5f5f5; padding: 4px 8px; border-radius: 6px; }
 
-/* ─── 模态框遮罩 ──────────────────────────────── */
+/* ─── 模态框遮罩 ─────────────────────────────────── */
 .modal-overlay {
   position: fixed; inset: 36px 0 0 0;
   background: rgba(0,0,0,0.45);
@@ -128,16 +105,17 @@ body {
   z-index: 200;
 }
 
-/* ─── 模态框主体 ──────────────────────────────── */
+/* ─── 模态框主体 ─────────────────────────────────── */
 .modal {
   background: white; border-radius: 16px;
   width: 660px; max-width: calc(100vw - 32px);
   max-height: calc(100vh - 80px);
   overflow: hidden; display: flex; flex-direction: column;
   box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+  transition: max-height 0.25s ease;
 }
 
-/* 模态框 Header：Tabs + 操作 */
+/* 模态框 Header */
 .modal-header {
   display: flex; align-items: stretch; justify-content: space-between;
   padding: 0 20px 0 4px;
@@ -151,9 +129,10 @@ body {
 }
 .modal-tab:hover { color: #444; }
 .modal-tab.active { color: #1a1a1a; font-weight: 600; border-bottom-color: #1a1a1a; }
+.modal-tab.disabled { pointer-events: none; opacity: 0.6; }
 
 .modal-header-right {
-  display: flex; align-items: center; gap: 10px; padding: 10px 0;
+  display: flex; align-items: center; gap: 8px; padding: 10px 0;
 }
 .edit-btn {
   display: flex; align-items: center; gap: 5px;
@@ -162,6 +141,20 @@ body {
   transition: all 0.15s; font-family: inherit;
 }
 .edit-btn:hover { background: #f8f8f8; border-color: #ccc; }
+.save-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 15px; border: none; border-radius: 7px;
+  background: #1a1a1a; font-size: 12px; color: white; cursor: pointer;
+  transition: all 0.15s; font-family: inherit; font-weight: 500;
+}
+.save-btn:hover { background: #333; }
+.save-btn:disabled { background: #ccc; cursor: not-allowed; }
+.cancel-btn {
+  padding: 5px 11px; border: 1px solid #e0e0e0; border-radius: 7px;
+  background: white; font-size: 12px; color: #666; cursor: pointer;
+  transition: all 0.15s; font-family: inherit;
+}
+.cancel-btn:hover { background: #f8f8f8; }
 .close-btn {
   width: 28px; height: 28px; border-radius: 50%;
   background: #f5f5f5; border: none; cursor: pointer;
@@ -173,7 +166,7 @@ body {
 /* 模态框 Body */
 .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
 
-/* 设置 Tab：头像+昵称行 */
+/* ─── 设置 Tab 样式 ──────────────────────────────── */
 .settings-profile {
   display: flex; align-items: center; gap: 16px;
   padding-bottom: 22px; margin-bottom: 22px;
@@ -184,7 +177,7 @@ body {
   width: 72px; height: 72px; border-radius: 50%;
   background: linear-gradient(135deg,#FF7B35,#FFB84D);
   display: flex; align-items: center; justify-content: center;
-  font-size: 34px; overflow: hidden; transition: opacity 0.15s;
+  font-size: 34px; overflow: hidden;
   position: relative; z-index: 1;
 }
 .avatar-overlay {
@@ -217,17 +210,45 @@ body {
 .ap-option.add { background: #f5f5f5; color: #999; font-size: 18px; }
 
 .profile-info { flex: 1; }
-.profile-name { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; }
-.profile-hint { font-size: 12px; color: #bbb; }
 
-/* 身份设定展示 */
+/* 昵称：只读态 */
+.profile-name { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 5px; }
+
+/* 昵称：编辑态 input */
+.profile-name-input {
+  font-size: 22px; font-weight: 700; color: #1a1a1a;
+  border: 1.5px solid #d0d0d0; border-radius: 8px;
+  padding: 5px 10px; width: 100%; outline: none;
+  font-family: inherit; background: #fafafa; margin-bottom: 5px;
+  transition: border-color 0.15s;
+}
+.profile-name-input:focus { border-color: #1a1a1a; background: white; }
+
 .sec-label {
   font-size: 11px; font-weight: 600; color: #bbb; text-transform: uppercase;
   letter-spacing: 0.6px; margin-bottom: 10px;
 }
+
+/* 身份设定：只读态 */
 .identity-text { font-size: 14px; line-height: 1.8; color: #444; }
 
-/* 记忆 Tab：markdown 富文本 */
+/* 身份设定：编辑态 textarea */
+.identity-textarea {
+  font-size: 14px; line-height: 1.8; color: #333;
+  border: 1.5px solid #d0d0d0; border-radius: 8px;
+  padding: 10px 12px; width: 100%; outline: none; resize: vertical;
+  font-family: inherit; background: #fafafa; min-height: 120px;
+  transition: border-color 0.15s;
+}
+.identity-textarea:focus { border-color: #1a1a1a; background: white; }
+
+/* 编辑提示 */
+.edit-hint {
+  font-size: 12px; color: #bbb; margin-top: 8px;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* ─── 记忆 Tab 样式 ──────────────────────────────── */
 .memory-content { font-size: 14px; line-height: 1.8; color: #333; }
 .memory-content h2 {
   font-size: 14px; font-weight: 700; color: #1a1a1a;
@@ -238,31 +259,81 @@ body {
 .memory-content li { margin-bottom: 5px; color: #555; }
 .memory-content .kv { color: #888; font-size: 12px; }
 
-/* 空状态 */
-.empty-state {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 52px 24px; text-align: center;
+/* ─── 模态框底部编辑输入区（记忆编辑用）─────────── */
+.modal-footer {
+  border-top: 1px solid #f0f0f0; padding: 14px 20px;
+  flex-shrink: 0; background: white;
+  display: none; /* 默认隐藏 */
 }
-.empty-icon {
-  width: 68px; height: 68px; border-radius: 50%; background: #f5f5f5;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 30px; margin-bottom: 14px;
-}
-.empty-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
-.empty-desc { font-size: 13px; color: #999; line-height: 1.65; max-width: 260px; margin-bottom: 20px; }
-.empty-cta {
-  padding: 8px 22px; background: #1a1a1a; color: white;
-  border: none; border-radius: 8px; font-size: 13px; cursor: pointer;
-  font-family: inherit; transition: background 0.15s;
-}
-.empty-cta:hover { background: #333; }
+.modal-footer.visible { display: block; }
 
-/* ─── 对话页 ──────────────────────────────────── */
+.memory-input-wrap {
+  border: 1.5px solid #e0e0e0; border-radius: 12px;
+  padding: 12px 14px; background: #fafafa;
+  transition: border-color 0.15s;
+}
+.memory-input-wrap:focus-within { border-color: #1a1a1a; background: white; }
+
+.memory-textarea {
+  width: 100%; border: none; outline: none; resize: none;
+  font-size: 13px; color: #333; font-family: inherit;
+  background: transparent; min-height: 28px; max-height: 100px;
+  line-height: 1.6; overflow-y: auto;
+}
+.memory-textarea::placeholder { color: #bbb; }
+
+.memory-input-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0;
+}
+.memory-input-hint { font-size: 12px; color: #bbb; }
+
+.mem-send-btn {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; transition: background 0.12s; flex-shrink: 0;
+}
+.mem-send-btn.active { background: #1a1a1a; color: white; }
+.mem-send-btn.inactive { background: #e8e8e8; color: #bbb; cursor: not-allowed; }
+
+/* ─── 记忆编辑 loading 态 ────────────────────────── */
+.memory-loading-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  background: #fafafa; border-radius: 12px; border: 1.5px solid #e8e8e8;
+}
+.memory-loading-text { font-size: 13px; color: #888; }
+
+/* ─── 记忆编辑成功态 ─────────────────────────────── */
+.memory-success-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px;
+  background: #f0faf4; border-radius: 12px; border: 1.5px solid #b7e8c8;
+}
+.success-icon {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #22c55e; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.success-text { font-size: 13px; color: #16a34a; font-weight: 500; }
+.success-sub { font-size: 12px; color: #86efac; margin-top: 1px; }
+
+/* ─── loading dots ───────────────────────────────── */
+.typing-dots { display: inline-flex; gap: 4px; align-items: center; }
+.typing-dots span {
+  width: 5px; height: 5px; border-radius: 50%; background: #bbb;
+  animation: blink 1.2s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0.25} 40%{opacity:1} }
+
+/* ─── 对话页 ─────────────────────────────────────── */
 .chat-page {
   display: flex; flex-direction: column;
   min-height: calc(100vh - 36px); background: white;
 }
-
 .chat-header {
   padding: 11px 20px; border-bottom: 1px solid #f0f0f0;
   display: flex; align-items: center; gap: 10px; flex-shrink: 0;
@@ -315,24 +386,6 @@ body {
   border-radius: 12px 3px 12px 12px;
 }
 
-/* 用户消息中的引用卡（已发出） */
-.sent-ref-card {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 6px; padding: 3px 8px; margin-bottom: 6px;
-  font-size: 11px; color: rgba(255,255,255,0.8);
-}
-
-/* Agent 回复中的超链接 */
-.settings-link {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 11px; background: #f0f0ff; border: 1px solid #d5d5f5;
-  border-radius: 7px; font-size: 12px; color: #5c5ce0;
-  cursor: pointer; margin-top: 10px; text-decoration: none;
-  transition: background 0.12s;
-}
-.settings-link:hover { background: #e8e8ff; }
-
 /* 工具调用标签 */
 .tool-call {
   display: flex; align-items: center; gap: 6px;
@@ -343,7 +396,17 @@ body {
   padding: 2px 6px; font-size: 10px; color: #888; font-family: monospace;
 }
 
-/* ─── 输入区 ──────────────────────────────────── */
+/* 设置超链接卡片 */
+.settings-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 11px; background: #f0f0ff; border: 1px solid #d5d5f5;
+  border-radius: 7px; font-size: 12px; color: #5c5ce0;
+  cursor: pointer; margin-top: 10px;
+  transition: background 0.12s;
+}
+.settings-link:hover { background: #e8e8ff; }
+
+/* 对话输入区 */
 .chat-input-area {
   padding: 10px 20px 16px; border-top: 1px solid #f5f5f5; flex-shrink: 0;
 }
@@ -351,126 +414,84 @@ body {
   border: 1px solid #e0e0e0; border-radius: 12px; padding: 11px 14px;
   background: white;
 }
-/* 引用卡（待发送） */
-.ref-card {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: #f4f4f4; border: 1px solid #e8e8e8;
-  border-radius: 6px; padding: 4px 10px 4px 8px;
-  font-size: 12px; color: #444; margin-bottom: 8px; cursor: default;
-  max-width: 200px;
-}
-.ref-card-icon { font-size: 12px; color: #888; }
-.ref-card-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ref-card-x {
-  color: #bbb; font-size: 14px; cursor: pointer; margin-left: 2px;
-  line-height: 1;
-}
-.ref-card-x:hover { color: #666; }
-
-.input-ph {
-  font-size: 13px; color: #bbb; padding: 4px 0;
-  min-height: 28px; display: flex; align-items: center;
-}
-.chat-input-bottom {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 8px; padding-top: 7px; border-top: 1px solid #f5f5f5;
-}
-.tool-btns { display: flex; gap: 12px; }
-.tb { background: none; border: none; font-size: 13px; color: #999; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-.tb:hover { color: #444; }
-.right-btns { display: flex; align-items: center; gap: 8px; }
-.model-sel { font-size: 12px; color: #999; cursor: pointer; display: flex; align-items: center; gap: 3px; padding: 3px 7px; border-radius: 6px; }
-.model-sel:hover { background: #f5f5f5; }
-.send-btn {
-  width: 32px; height: 32px; border-radius: 8px;
-  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 14px; transition: background 0.12s;
-}
-.send-btn.active { background: #1a1a1a; color: white; }
-.send-btn.inactive { background: #e8e8e8; color: #bbb; cursor: default; }
-
-/* ─── 引用卡 tooltip ────────────────────────────── */
-.ref-card-wrap { position: relative; display: inline-block; }
-.ref-tooltip {
-  display: none;
-  position: absolute; bottom: calc(100% + 10px); left: 0;
-  background: white; border: 1px solid #e5e5e5; border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
-  padding: 18px 20px; width: 380px; max-width: calc(100vw - 48px);
-  max-height: 320px; overflow-y: auto;
-  z-index: 50; font-size: 13px; line-height: 1.7;
-  pointer-events: none;
-}
-.ref-card-wrap:hover .ref-tooltip { display: block; }
-.ref-tooltip-title {
-  font-size: 11px; font-weight: 600; color: #bbb; text-transform: uppercase;
-  letter-spacing: 0.5px; margin-bottom: 12px;
-}
-/* 设置 tooltip：头像+昵称行 */
-.rt-profile {
-  display: flex; align-items: center; gap: 12px;
-  padding-bottom: 14px; margin-bottom: 14px;
-  border-bottom: 1px solid #f0f0f0;
-}
-.rt-avatar {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-  background: linear-gradient(135deg,#FF7B35,#FFB84D);
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-}
-.rt-name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
-.rt-label { font-size: 11px; color: #bbb; margin-top: 2px; }
-.rt-sec-label { font-size: 11px; font-weight: 600; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.rt-body { font-size: 13px; color: #444; line-height: 1.75; }
-/* 记忆 tooltip */
-.rt-memory h2 {
-  font-size: 13px; font-weight: 700; color: #1a1a1a;
-  margin: 14px 0 6px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;
-}
-.rt-memory h2:first-child { margin-top: 0; }
-.rt-memory ul { padding-left: 16px; }
-.rt-memory li { margin-bottom: 4px; color: #555; }
-.rt-memory .kv { color: #aaa; font-size: 12px; }
-
-/* ─── 真实输入框 ─────────────────────────────────── */
-.real-input {
+.chat-real-input {
   width: 100%; border: none; outline: none; resize: none;
   font-size: 13px; color: #333; font-family: inherit;
   background: transparent; min-height: 28px; max-height: 120px;
   line-height: 1.6; overflow-y: auto;
 }
-.real-input::placeholder { color: #bbb; }
-
-/* ─── 发送中 loading 气泡 ───────────────────────── */
-.typing-dots { display: inline-flex; gap: 4px; align-items: center; padding: 4px 0; }
-.typing-dots span {
-  width: 6px; height: 6px; border-radius: 50%; background: #bbb;
-  animation: blink 1.2s ease-in-out infinite;
+.chat-real-input::placeholder { color: #bbb; }
+.chat-input-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 8px; padding-top: 7px; border-top: 1px solid #f5f5f5;
 }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes blink { 0%,80%,100%{opacity:0.25} 40%{opacity:1} }
+.chat-tool-btns { display: flex; gap: 12px; }
+.chat-tb { background: none; border: none; font-size: 13px; color: #999; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+.chat-tb:hover { color: #444; }
+.chat-right-btns { display: flex; align-items: center; gap: 8px; }
+.model-sel { font-size: 12px; color: #999; cursor: pointer; display: flex; align-items: center; gap: 3px; padding: 3px 7px; border-radius: 6px; }
+.model-sel:hover { background: #f5f5f5; }
+.chat-send-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: background 0.12s;
+}
+.chat-send-btn.active { background: #1a1a1a; color: white; }
+.chat-send-btn.inactive { background: #e8e8e8; color: #bbb; cursor: not-allowed; }
+
+.input-ph {
+  font-size: 13px; color: #bbb; padding: 4px 0;
+  min-height: 28px; display: flex; align-items: center;
+}
+
+/* ─── 保存成功 toast ─────────────────────────────── */
+.toast {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  background: #1a1a1a; color: white;
+  padding: 8px 18px; border-radius: 24px; font-size: 13px;
+  opacity: 0; transition: opacity 0.25s; pointer-events: none; white-space: nowrap;
+  z-index: 300;
+}
+.toast.show { opacity: 1; }
+
+/* ─── 空状态 ─────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 52px 24px; text-align: center;
+}
+.empty-icon {
+  width: 68px; height: 68px; border-radius: 50%; background: #f5f5f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; margin-bottom: 14px;
+}
+.empty-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+.empty-desc { font-size: 13px; color: #999; line-height: 1.65; max-width: 260px; margin-bottom: 20px; }
+.empty-cta {
+  padding: 8px 22px; background: #1a1a1a; color: white;
+  border: none; border-radius: 8px; font-size: 13px; cursor: pointer;
+  font-family: inherit;
+}
 </style>
 </head>
 <body>
 
 <!-- ===================== 原型导航 ===================== -->
 <div class="proto-nav">
-  <span class="label">交互原型 · SkyClaw设置改版</span>
-  <button id="btn-s1" class="active" onclick="goto('s1')">① SkyClaw设置 tab</button>
-  <button id="btn-s2" onclick="goto('s2')">② SkyClaw记忆 tab</button>
-  <button id="btn-s3" onclick="goto('s3')">③ 记忆为空（新用户）</button>
-  <button id="btn-s4" onclick="goto('s4')">④ 编辑设置 → 对话页</button>
-  <button id="btn-s5" onclick="goto('s5')">⑤ 编辑记忆 → 对话页</button>
-  <button id="btn-s6" onclick="goto('s6')">⑥ Agent 完成后回复</button>
+  <span class="label">原型 v2 · 弹窗内编辑</span>
+  <button id="btn-s1" class="active" onclick="gotoScreen('s1')">① 设置 tab（查看/编辑）</button>
+  <button id="btn-s2" onclick="gotoScreen('s2')">② 记忆 tab（查看/编辑）</button>
+  <button id="btn-s3" onclick="gotoScreen('s3')">③ 记忆为空（新用户）</button>
+  <button id="btn-s4" onclick="gotoScreen('s4')">④ 对话编辑设置</button>
 </div>
 
 <div id="app">
 
+
 <!-- ============================================================
-     SCREEN 1：配置SkyClaw 弹窗 — SkyClaw设置 Tab
+     SCREEN 1：设置 Tab（查看态 → 点「编辑设置」→ 编辑态）
 ============================================================ -->
 <div class="screen active" id="s1">
-  <!-- 背景：Skywork 主页（模糊） -->
+  <!-- 背景 Skywork -->
   <div class="sw-bg" style="filter:blur(2px) brightness(0.93);pointer-events:none;user-select:none">
     <div class="sw-sidebar">
       <div class="sw-logo"><div class="sw-logo-icon">S</div><span class="sw-logo-text">Skywork</span></div>
@@ -481,7 +502,6 @@ body {
       <div class="sw-nav-section">最近</div>
       <div class="sw-nav-sub">◇ 简单打招呼</div>
       <div class="sw-nav-sub">◇ 风神巴巴托斯...</div>
-      <div class="sw-nav-sub">◇ Hi there</div>
     </div>
     <div class="sw-main">
       <div class="sw-topbar">
@@ -511,59 +531,57 @@ body {
 
   <!-- 弹窗遮罩 -->
   <div class="modal-overlay">
+    <!-- toast -->
+    <div class="toast" id="s1-toast">✓ 设置已保存</div>
     <div class="modal" onclick="event.stopPropagation()">
 
-      <!-- Header：Tabs + 编辑按钮 + 关闭 -->
+      <!-- Header：只有 tabs + 关闭 -->
       <div class="modal-header">
         <div class="modal-tabs">
           <div class="modal-tab active">SkyClaw设置</div>
-          <div class="modal-tab" onclick="goto('s2')" style="cursor:pointer">SkyClaw记忆</div>
+          <div class="modal-tab" onclick="gotoScreen('s2')" style="cursor:pointer">SkyClaw记忆</div>
         </div>
         <div class="modal-header-right">
-          <button class="edit-btn" onclick="goto('s4')">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 2l3 3-9 9H2v-3l9-9z"/></svg>
-            编辑设置
-          </button>
           <button class="close-btn">✕</button>
         </div>
       </div>
 
-      <!-- Body -->
+      <!-- Body：直接可编辑态 -->
       <div class="modal-body">
-        <!-- 头像 + 昵称 -->
+        <!-- 头像 + 昵称行 -->
         <div class="settings-profile">
-          <div class="avatar-wrap" onclick="togglePicker(event,'ap1')">
-            <div class="avatar-circle">🤖</div>
+          <div class="avatar-wrap" onclick="togglePicker(event,'s1-ap')">
+            <div class="avatar-circle" id="s1-avatar">🤖</div>
             <div class="avatar-overlay">
-              <span>✏️</span>
-              <span>更换</span>
+              <span>✏️</span><span>更换</span>
             </div>
-            <!-- 头像选择浮层 -->
-            <div class="avatar-picker" id="ap1">
+            <div class="avatar-picker" id="s1-ap">
               <div class="ap-title">选择头像</div>
               <div class="ap-grid">
-                <div class="ap-option sel" style="background:linear-gradient(135deg,#FF7B35,#FFB84D)">🤖</div>
-                <div class="ap-option" style="background:linear-gradient(135deg,#36D1DC,#5B86E5)">🦾</div>
-                <div class="ap-option" style="background:linear-gradient(135deg,#f953c6,#b91d73)">🌸</div>
-                <div class="ap-option" style="background:linear-gradient(135deg,#56ab2f,#a8e063)">🍀</div>
-                <div class="ap-option add">＋</div>
-              </div>
-              <div style="margin-top:10px;padding-top:8px;border-top:1px solid #f0f0f0;font-size:11px;color:#bbb">
-                也可在对话中发送图片 → Agent 帮你设置
+                <div class="ap-option sel" style="background:linear-gradient(135deg,#FF7B35,#FFB84D)" data-screen="s1">🤖</div>
+                <div class="ap-option" style="background:linear-gradient(135deg,#36D1DC,#5B86E5)" data-screen="s1">🦾</div>
+                <div class="ap-option" style="background:linear-gradient(135deg,#f953c6,#b91d73)" data-screen="s1">🌸</div>
+                <div class="ap-option" style="background:linear-gradient(135deg,#56ab2f,#a8e063)" data-screen="s1">🍀</div>
+                <div class="ap-option add" data-screen="s1">＋</div>
               </div>
             </div>
           </div>
           <div class="profile-info">
-            <div class="profile-name" id="s1-nickname">SkyClaw</div>
+            <!-- 直接显示可编辑 input -->
+            <input class="profile-name-input" id="s1-name-input"
+                   type="text" value="SkyClaw"
+                   placeholder="输入 Agent 昵称" />
           </div>
         </div>
 
-        <!-- 身份设定（只读展示） -->
+        <!-- 身份设定：直接显示可编辑 textarea -->
         <div class="sec-label">身份设定</div>
-        <div class="identity-text">
-          直接坦率、有事直说不啰嗦；具备独立观点，敢于表达同意或反对；工作认真严谨，追求逻辑思维与结构精确；沟通风格简洁，遇到模糊需求时先拆解确认，再开始执行。
-          <br><br>
-          敢于挑战不合理的想法，信息不足时会要求补充后再回应；对知识保持饥渴感，对问题敢于质疑，以结果为导向。秉持「less is more」的产品哲学，精准支持用户的每个需求。
+        <textarea class="identity-textarea" id="s1-identity-input"
+          rows="6">直接坦率、有事直说不啰嗦；具备独立观点，敢于表达同意或反对；工作认真严谨，追求逻辑思维与结构精确；沟通风格简洁，遇到模糊需求时先拆解确认，再开始执行。
+
+敢于挑战不合理的想法，信息不足时会要求补充后再回应；对知识保持饥渴感，对问题敢于质疑，以结果为导向。秉持「less is more」的产品哲学，精准支持用户的每个需求。</textarea>
+        <div class="edit-hint">
+          <span>💡</span> 描述越具体，Agent 的行为越贴合你的期望
         </div>
 
         <!-- 云电脑 -->
@@ -573,13 +591,19 @@ body {
           <div style="font-size:13px;color:#888;">专属资源，7*24小时在线</div>
         </div>
       </div>
+
+      <!-- Footer：取消 + 保存 -->
+      <div style="border-top:1px solid #f0f0f0;padding:14px 24px;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;background:white;">
+        <button class="cancel-btn" onclick="resetSettings()">取消</button>
+        <button class="save-btn" id="s1-save-btn" onclick="saveSettings()">保存</button>
+      </div>
     </div>
   </div>
 </div>
 
 
 <!-- ============================================================
-     SCREEN 2：配置SkyClaw 弹窗 — SkyClaw记忆 Tab
+     SCREEN 2：记忆 Tab（查看态 → 点「编辑记忆」→ 底部输入框）
 ============================================================ -->
 <div class="screen" id="s2">
   <div class="sw-bg" style="filter:blur(2px) brightness(0.93);pointer-events:none;user-select:none">
@@ -600,22 +624,28 @@ body {
 
   <div class="modal-overlay">
     <div class="modal" onclick="event.stopPropagation()">
+
+      <!-- Header -->
       <div class="modal-header">
         <div class="modal-tabs">
-          <div class="modal-tab" onclick="goto('s1')" style="cursor:pointer">SkyClaw设置</div>
+          <div class="modal-tab" onclick="gotoScreen('s1')" style="cursor:pointer">SkyClaw设置</div>
           <div class="modal-tab active">SkyClaw记忆</div>
         </div>
         <div class="modal-header-right">
-          <button class="edit-btn" onclick="goto('s5')">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 2l3 3-9 9H2v-3l9-9z"/></svg>
-            编辑记忆
+          <!-- 编辑记忆按钮（编辑态时变为「完成」） -->
+          <button class="edit-btn" id="s2-edit-btn" onclick="toggleMemoryEdit()">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
+            </svg>
+            <span id="s2-edit-btn-label">编辑记忆</span>
           </button>
-          <button class="close-btn">✕</button>
+          <button class="close-btn" id="s2-close-btn" onclick="resetMemoryEdit()">✕</button>
         </div>
       </div>
 
-      <div class="modal-body">
-        <div class="memory-content">
+      <!-- Body（记忆内容） -->
+      <div class="modal-body" id="s2-body">
+        <div class="memory-content" id="s2-memory-content">
           <h2>用户基本信息</h2>
           <ul>
             <li>姓名：Wendy，AI 产品经理</li>
@@ -647,13 +677,59 @@ body {
           </ul>
         </div>
       </div>
+
+      <!-- Footer：编辑输入区（默认隐藏） -->
+      <div class="modal-footer" id="s2-footer">
+
+        <!-- 状态 A：输入框（默认） -->
+        <div id="s2-input-state">
+          <div class="memory-input-wrap">
+            <textarea
+              class="memory-textarea"
+              id="s2-memory-textarea"
+              placeholder="告诉我你想添加、修改或删除的记忆内容…"
+              rows="1"
+              oninput="onMemoryInput()"
+              onkeydown="onMemoryKeydown(event)"
+            ></textarea>
+            <div class="memory-input-bottom">
+              <span class="memory-input-hint">Enter 发送 · Shift+Enter 换行</span>
+              <button class="mem-send-btn inactive" id="s2-send-btn" onclick="sendMemoryEdit()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 状态 B：loading（默认隐藏） -->
+        <div id="s2-loading-state" style="display:none">
+          <div class="memory-loading-wrap">
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+            <span class="memory-loading-text">正在更新记忆…</span>
+          </div>
+        </div>
+
+        <!-- 状态 C：成功（默认隐藏） -->
+        <div id="s2-success-state" style="display:none">
+          <div class="memory-success-wrap">
+            <div class="success-icon">✓</div>
+            <div>
+              <div class="success-text">记忆已更新</div>
+              <div class="success-sub">下次对话开始时生效</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 </div>
 
 
 <!-- ============================================================
-     SCREEN 3：配置SkyClaw 弹窗 — SkyClaw记忆 空状态
+     SCREEN 3：记忆 Tab — 空状态
 ============================================================ -->
 <div class="screen" id="s3">
   <div class="sw-bg" style="filter:blur(2px) brightness(0.93);pointer-events:none;user-select:none">
@@ -674,18 +750,19 @@ body {
     <div class="modal" onclick="event.stopPropagation()">
       <div class="modal-header">
         <div class="modal-tabs">
-          <div class="modal-tab" onclick="goto('s1')" style="cursor:pointer">SkyClaw设置</div>
+          <div class="modal-tab" onclick="gotoScreen('s1')" style="cursor:pointer">SkyClaw设置</div>
           <div class="modal-tab active">SkyClaw记忆</div>
         </div>
         <div class="modal-header-right">
-          <button class="edit-btn" style="opacity:0.4;cursor:not-allowed">
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 2l3 3-9 9H2v-3l9-9z"/></svg>
+          <button class="edit-btn" style="opacity:0.35;cursor:not-allowed">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
+            </svg>
             编辑记忆
           </button>
           <button class="close-btn">✕</button>
         </div>
       </div>
-
       <div class="modal-body">
         <div class="empty-state">
           <div class="empty-icon">🧠</div>
@@ -693,7 +770,7 @@ body {
           <div class="empty-desc">
             记忆来自对话中体现出的稳定偏好和习惯，持续和 SkyClaw 交流，它会把值得记住的事沉淀下来。
           </div>
-          <button class="empty-cta" onclick="alert('跳转至首页对话框')">去对话</button>
+          <button class="empty-cta">去对话</button>
         </div>
       </div>
     </div>
@@ -702,324 +779,413 @@ body {
 
 
 <!-- ============================================================
-     SCREEN 4：对话页 — 编辑设置（带引用卡，未发送）
+     SCREEN 4：对话页 — 通过对话编辑 SkyClaw 设置
 ============================================================ -->
 <div class="screen" id="s4">
   <div class="chat-page">
+
     <!-- Header -->
     <div class="chat-header">
-      <button class="chat-back" onclick="goto('s1')">←</button>
+      <button class="chat-back" onclick="gotoScreen('s1')">←</button>
       <div class="chat-header-info">
         <div class="chat-header-title">新对话</div>
         <div class="chat-header-sub">告诉 SkyClaw 你想修改的内容，它会帮你完成设置</div>
       </div>
     </div>
 
-    <!-- Messages（空） -->
-    <div class="chat-messages no-msgs">
-      <div class="chat-empty-hint">在下方输入，开始编辑 SkyClaw 设置</div>
+    <!-- 消息区（初始为空，发送后注入消息） -->
+    <div class="chat-messages" id="s4-messages">
+      <!-- 消息由 JS 动态注入 -->
     </div>
 
     <!-- 输入区 -->
     <div class="chat-input-area">
       <div class="chat-input-wrap">
-        <!-- 引用卡（hover 展示完整设置内容） -->
-        <div>
-          <div class="ref-card-wrap">
-            <div class="ref-card">
-              <span class="ref-card-icon">⚙️</span>
-              <span class="ref-card-name">SkyClaw设置</span>
-              <span class="ref-card-x">✕</span>
-            </div>
-            <div class="ref-tooltip">
-              <div class="ref-tooltip-title">SkyClaw 设置</div>
-              <div class="rt-profile">
-                <div class="rt-avatar">🤖</div>
-                <div>
-                  <div class="rt-name">SkyClaw</div>
-                  <div class="rt-label">昵称</div>
-                </div>
-              </div>
-              <div class="rt-sec-label">身份设定</div>
-              <div class="rt-body">
-                直接坦率、有事直说不啰嗦；具备独立观点，敢于表达同意或反对；工作认真严谨，追求逻辑思维与结构精确；沟通风格简洁，遇到模糊需求时先拆解确认，再开始执行。
-                <br><br>
-                敢于挑战不合理的想法，信息不足时会要求补充后再回应；对知识保持饥渴感，对问题敢于质疑，以结果为导向。秉持「less is more」的产品哲学，精准支持用户的每个需求。
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 真实输入框 -->
-        <textarea class="real-input" id="input-s4"
-          placeholder='例如：把昵称改成"小甜甜"，身份里加上"擅长数据分析"…'
-          oninput="onInput('input-s4','send-s4')"
-          onkeydown="onKeyDown(event,'input-s4','send-s4')"
-          rows="1"></textarea>
+        <textarea
+          class="chat-real-input"
+          id="s4-input"
+          rows="1"
+          oninput="onChatInput()"
+          onkeydown="onChatKeydown(event)"
+        >把昵称改成小甜甜，把你的身份改成数据分析师</textarea>
         <div class="chat-input-bottom">
-          <div class="tool-btns">
-            <button class="tb">＋</button>
-            <button class="tb">⚙ 工具</button>
-            <button class="tb">◇ 技能</button>
+          <div class="chat-tool-btns">
+            <button class="chat-tb">＋</button>
+            <button class="chat-tb">⚙ 工具</button>
+            <button class="chat-tb">◇ 技能</button>
           </div>
-          <div class="right-btns">
+          <div class="chat-right-btns">
             <div class="model-sel">✦ 智选模型 ⌄</div>
-            <button class="send-btn inactive" id="send-s4" onclick="sendMessage('input-s4','send-s4','settings')">▶</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ============================================================
-     SCREEN 5：对话页 — 编辑记忆（带引用卡，未发送）
-============================================================ -->
-<div class="screen" id="s5">
-  <div class="chat-page">
-    <div class="chat-header">
-      <button class="chat-back" onclick="goto('s2')">←</button>
-      <div class="chat-header-info">
-        <div class="chat-header-title">新对话</div>
-        <div class="chat-header-sub">告诉 SkyClaw 你想修改或补充的记忆内容</div>
-      </div>
-    </div>
-
-    <div class="chat-messages no-msgs">
-      <div class="chat-empty-hint">在下方输入，开始编辑 SkyClaw 记忆</div>
-    </div>
-
-    <div class="chat-input-area">
-      <div class="chat-input-wrap">
-        <!-- 引用卡（hover 展示完整记忆内容） -->
-        <div>
-          <div class="ref-card-wrap">
-            <div class="ref-card">
-              <span class="ref-card-icon">🧠</span>
-              <span class="ref-card-name">SkyClaw记忆</span>
-              <span class="ref-card-x">✕</span>
-            </div>
-            <div class="ref-tooltip">
-              <div class="ref-tooltip-title">SkyClaw 记忆</div>
-              <div class="rt-memory">
-                <h2>用户基本信息</h2>
-                <ul>
-                  <li>姓名：Wendy，AI 产品经理</li>
-                  <li>时区：北京时间（UTC+8），代码中需做时区转换</li>
-                </ul>
-                <h2>回复风格</h2>
-                <ul>
-                  <li>简洁为主，不滥用 emoji</li>
-                  <li>不确定时先询问，不擅自假设</li>
-                  <li class="kv">Why：用户明确指定偏好</li>
-                  <li class="kv">How to apply：所有对话默认遵守</li>
-                </ul>
-                <h2>飞书日记任务</h2>
-                <ul>
-                  <li>触发时间：每天 22:00（北京时间）</li>
-                  <li>写入方式：插入文档最顶部（index: 0），最新条目始终在最上方</li>
-                  <li>日记结构：H1 为日期标题，H2 今日总结，最后加分割线</li>
-                  <li>特殊规则：当天无对话或无重要事项时，内容设为「今日日记内容为空」</li>
-                  <li class="kv">How to apply：执行日记写入任务时严格遵守格式与写入位置</li>
-                </ul>
-                <h2>工作方式偏好</h2>
-                <ul>
-                  <li>动核心逻辑（改 SQL 分区、改 PRD 主流程、删文件）前先确认一次</li>
-                  <li>写代码时带必要的中文注释，遇到新概念简单解释原理</li>
-                  <li>不要每次都从零科普已掌握的知识点</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <textarea class="real-input" id="input-s5"
-          placeholder='例如：删掉飞书日记任务那条，新增一条"我习惯用番茄工作法"…'
-          oninput="onInput('input-s5','send-s5')"
-          onkeydown="onKeyDown(event,'input-s5','send-s5')"
-          rows="1"></textarea>
-        <div class="chat-input-bottom">
-          <div class="tool-btns">
-            <button class="tb">＋</button>
-            <button class="tb">⚙ 工具</button>
-            <button class="tb">◇ 技能</button>
-          </div>
-          <div class="right-btns">
-            <div class="model-sel">✦ 智选模型 ⌄</div>
-            <button class="send-btn inactive" id="send-s5" onclick="sendMessage('input-s5','send-s5','memory')">▶</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ============================================================
-     SCREEN 6：对话页 — Agent 编辑完成后的回复
-============================================================ -->
-<div class="screen" id="s6">
-  <div class="chat-page">
-    <div class="chat-header">
-      <button class="chat-back" onclick="goto('s1')">←</button>
-      <div class="chat-header-info">
-        <div class="chat-header-title">编辑 SkyClaw 设置</div>
-        <div class="chat-header-sub">2分钟前</div>
-      </div>
-    </div>
-
-    <div class="chat-messages">
-      <!-- 用户消息（内容由 JS 动态填入） -->
-      <div class="msg user" id="s6-user-msg-wrap">
-        <div class="msg-av user-av">W</div>
-        <div class="msg-inner">
-          <div class="msg-name">Wendy</div>
-          <div class="msg-bubble">
-            <div class="sent-ref-card" id="s6-ref-label">⚙️ SkyClaw设置</div>
-            <div id="s6-user-text">把昵称改成"小甜甜"，身份里加上"擅长数据分析，熟悉 MaxCompute SQL"</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent typing（加载中，默认隐藏） -->
-      <div class="msg agent" id="s6-typing" style="display:none">
-        <div class="msg-av">🤖</div>
-        <div class="msg-inner">
-          <div class="msg-name">小甜甜 · 智选模型</div>
-          <div class="msg-bubble">
-            <div class="typing-dots"><span></span><span></span><span></span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 正式回复（默认隐藏，loading 后显示） -->
-      <div class="msg agent" id="s6-reply" style="display:none">
-        <div class="msg-av">🤖</div>
-        <div class="msg-inner">
-          <div class="msg-name">小甜甜 · 智选模型</div>
-          <div class="msg-bubble">
-            <div class="tool-call">
-              <span class="tc-icon">MCP 工具</span>
-              <span>write · identity.md</span>
-            </div>
-            已完成设置更新，具体改动如下：
-            <br><br>
-            <strong>昵称</strong>：SkyClaw → <strong>小甜甜</strong><br>
-            <strong>身份</strong>：在原有设定末尾新增「擅长数据分析，熟悉 MaxCompute SQL」
-            <br><br>
-            如需查看完整配置，可点击下方链接重新打开设置页。
-            <br>
-            <a class="settings-link" onclick="gotoWithNickname('s1','小甜甜')">
-              ⚙️ 查看 SkyClaw 设置
-            </a>
+            <button class="chat-send-btn active" id="s4-send-btn" onclick="sendChatMessage()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 输入区（可继续对话） -->
-    <div class="chat-input-area">
-      <div class="chat-input-wrap">
-        <div class="input-ph">继续告诉我还需要修改什么…</div>
-        <div class="chat-input-bottom">
-          <div class="tool-btns">
-            <button class="tb">＋</button>
-            <button class="tb">⚙ 工具</button>
-            <button class="tb">◇ 技能</button>
-          </div>
-          <div class="right-btns">
-            <div class="model-sel">✦ 智选模型 ⌄</div>
-            <button class="send-btn inactive">▶</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
 </div><!-- #app -->
 
 <script>
-// ─── 屏幕切换 ────────────────────────────────────
-function goto(id) {
+// ─── 屏幕切换 ─────────────────────────────────────
+function gotoScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   const btn = document.getElementById('btn-' + id);
   if (btn) btn.classList.add('active');
+
+  // 切换到记忆 tab 时重置记忆编辑状态
+  if (id === 's2') resetMemoryEdit();
+  // 切换到对话页时重置对话状态
+  if (id === 's4') {
+    chatRound = 0; chatBusy = false;
+    const ta = document.getElementById('s4-input');
+    if (ta) {
+      ta.value = '把昵称改成小甜甜，把你的身份改成数据分析师';
+      ta.disabled = false;
+      ta.placeholder = '';
+      ta.style.height = 'auto';
+    }
+    const btn = document.getElementById('s4-send-btn');
+    if (btn) { btn.classList.add('active'); btn.classList.remove('inactive'); }
+    const msgs = document.getElementById('s4-messages');
+    if (msgs) msgs.innerHTML = '';
+  }
 }
 
-// 跳到设置页并更新昵称
-function gotoWithNickname(id, nickname) {
-  document.getElementById('s1-nickname').textContent = nickname;
-  goto(id);
+
+/* ════════════════════════════════════════════════
+   设置 Tab 逻辑（直接可编辑态）
+════════════════════════════════════════════════ */
+
+// 保存上一次保存的值（用于「取消」时恢复）
+let savedName = 'SkyClaw';
+let savedIdentity = document.getElementById('s1-identity-input')
+  ? document.getElementById('s1-identity-input').value : '';
+
+// 取消：恢复到上次保存的值
+function resetSettings() {
+  document.getElementById('s1-name-input').value = savedName;
+  document.getElementById('s1-identity-input').value = savedIdentity;
 }
 
-// ─── 输入框监听 ──────────────────────────────────
-function onInput(inputId, sendId) {
-  const val = document.getElementById(inputId).value.trim();
-  const btn = document.getElementById(sendId);
+// 保存设置
+function saveSettings() {
+  const saveBtn = document.getElementById('s1-save-btn');
+  saveBtn.textContent = '保存中…';
+  saveBtn.disabled = true;
+
+  setTimeout(() => {
+    // 记录当前值作为新的"已保存"基准
+    savedName = document.getElementById('s1-name-input').value.trim() || 'SkyClaw';
+    savedIdentity = document.getElementById('s1-identity-input').value;
+    document.getElementById('s1-name-input').value = savedName;
+
+    saveBtn.textContent = '保存';
+    saveBtn.disabled = false;
+
+    // 弹 toast
+    const toast = document.getElementById('s1-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }, 700);
+}
+
+
+/* ════════════════════════════════════════════════
+   记忆 Tab 编辑逻辑
+════════════════════════════════════════════════ */
+
+let memoryEditOpen = false;
+
+// 切换记忆编辑态（打开/关闭输入框）
+function toggleMemoryEdit() {
+  if (memoryEditOpen) {
+    // 关闭：重置到初始状态
+    resetMemoryEdit();
+  } else {
+    // 打开
+    memoryEditOpen = true;
+    document.getElementById('s2-footer').classList.add('visible');
+    document.getElementById('s2-edit-btn-label').textContent = '完成';
+    // 显示输入状态，隐藏其他状态
+    setMemoryFooterState('input');
+    // 聚焦
+    setTimeout(() => document.getElementById('s2-memory-textarea').focus(), 50);
+  }
+}
+
+// 重置记忆编辑
+function resetMemoryEdit() {
+  memoryEditOpen = false;
+  document.getElementById('s2-footer').classList.remove('visible');
+  document.getElementById('s2-edit-btn-label').textContent = '编辑记忆';
+  document.getElementById('s2-edit-btn').style.opacity = '1';
+  document.getElementById('s2-edit-btn').style.pointerEvents = 'auto';
+  setMemoryFooterState('input');
+  // 清空 textarea
+  const ta = document.getElementById('s2-memory-textarea');
+  ta.value = '';
+  ta.style.height = 'auto';
+  document.getElementById('s2-send-btn').classList.remove('active');
+  document.getElementById('s2-send-btn').classList.add('inactive');
+}
+
+// 切换 footer 内的显示状态
+function setMemoryFooterState(state) {
+  // state: 'input' | 'loading' | 'success'
+  document.getElementById('s2-input-state').style.display   = state === 'input'   ? 'block' : 'none';
+  document.getElementById('s2-loading-state').style.display = state === 'loading' ? 'block' : 'none';
+  document.getElementById('s2-success-state').style.display = state === 'success' ? 'block' : 'none';
+}
+
+// textarea 输入监听
+function onMemoryInput() {
+  const ta = document.getElementById('s2-memory-textarea');
+  const val = ta.value.trim();
+  const btn = document.getElementById('s2-send-btn');
   if (val) {
     btn.classList.remove('inactive'); btn.classList.add('active');
   } else {
     btn.classList.remove('active'); btn.classList.add('inactive');
   }
-  // 自动撑高 textarea
-  const ta = document.getElementById(inputId);
+  // 自动撑高
   ta.style.height = 'auto';
-  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+  ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
 }
 
-// Enter 发送（Shift+Enter 换行）
-function onKeyDown(e, inputId, sendId) {
+// Enter 发送
+function onMemoryKeydown(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    sendMessage(inputId, sendId, inputId === 'input-s4' ? 'settings' : 'memory');
+    sendMemoryEdit();
   }
 }
 
-// ─── 发送消息 ─────────────────────────────────────
-function sendMessage(inputId, sendId, type) {
-  const ta = document.getElementById(inputId);
-  const val = ta.value.trim();
+// 发送记忆编辑
+function sendMemoryEdit() {
+  const val = document.getElementById('s2-memory-textarea').value.trim();
   if (!val) return;
 
-  // 填入用户消息文本和引用卡标签
-  document.getElementById('s6-user-text').textContent = val;
-  document.getElementById('s6-ref-label').textContent =
-    type === 'settings' ? '⚙️ SkyClaw设置' : '🧠 SkyClaw记忆';
+  // 禁用编辑按钮
+  document.getElementById('s2-edit-btn').style.opacity = '0.5';
+  document.getElementById('s2-edit-btn').style.pointerEvents = 'none';
 
-  // 重置 screen 6 状态（防止重复点击时残留）
-  document.getElementById('s6-typing').style.display = 'none';
-  document.getElementById('s6-reply').style.display = 'none';
+  // 切换到 loading
+  setMemoryFooterState('loading');
 
-  // 切换到 screen 6
-  goto('s6');
-
-  // 清空输入框
-  ta.value = '';
-  ta.style.height = 'auto';
-  document.getElementById(sendId).classList.remove('active');
-  document.getElementById(sendId).classList.add('inactive');
-
-  // 延迟 800ms 显示 typing，再延迟 1.8s 显示正式回复
+  // 1.8s 后切换到 success
   setTimeout(() => {
-    document.getElementById('s6-typing').style.display = 'flex';
-    scrollToBottom();
-  }, 800);
+    setMemoryFooterState('success');
 
-  setTimeout(() => {
-    document.getElementById('s6-typing').style.display = 'none';
-    document.getElementById('s6-reply').style.display = 'flex';
-    scrollToBottom();
-  }, 2600);
+    // 2s 后自动关闭 footer，恢复按钮
+    setTimeout(() => {
+      resetMemoryEdit();
+    }, 2000);
+  }, 1800);
 }
 
-function scrollToBottom() {
-  const msgs = document.querySelector('#s6 .chat-messages');
+
+/* ════════════════════════════════════════════════
+   对话页（s4）逻辑
+════════════════════════════════════════════════ */
+
+// 对话轮次：0=未发送 1=已发首轮/等待用户确认 2=已完成
+let chatRound = 0;
+let chatBusy = false; // loading 中禁止再次发送
+
+// textarea 自动撑高 & 按钮状态
+function onChatInput() {
+  const ta = document.getElementById('s4-input');
+  const btn = document.getElementById('s4-send-btn');
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+  const hasVal = ta.value.trim().length > 0;
+  btn.classList.toggle('active', hasVal);
+  btn.classList.toggle('inactive', !hasVal);
+}
+
+// Enter 发送（Shift+Enter 换行）
+function onChatKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+}
+
+// 统一发送入口
+function sendChatMessage() {
+  if (chatBusy) return;
+  const ta = document.getElementById('s4-input');
+  const userText = ta.value.trim();
+  if (!userText) return;
+
+  if (chatRound === 0) {
+    doRound1(userText);
+  } else if (chatRound === 1) {
+    doRound2(userText);
+  }
+}
+
+// ── 第一轮：用户发出修改指令 → Agent 给出冲突确认 ──
+function doRound1(userText) {
+  chatBusy = true;
+  const msgBox = document.getElementById('s4-messages');
+  const ta = document.getElementById('s4-input');
+
+  appendUserMsg(msgBox, userText);
+  lockInput(ta, '');
+  scrollChat();
+
+  agentTypingThen(msgBox, 800, 2000, () => {
+    const bubble = `
+      <div class="tool-call">
+        <span class="tc-icon">read · identity.md</span>
+      </div>
+      检测到以下 <strong>2 处修改</strong>，与当前配置存在差异，请确认：
+      <br><br>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 12px;font-size:12px;line-height:2;margin-bottom:2px;">
+        <div>🏷️ <strong>昵称</strong>　当前：<span style="color:#888">SkyClaw</span>　→　修改为：<strong>小甜甜</strong></div>
+        <div>👤 <strong>身份</strong>　当前：<span style="color:#888">产品经理</span>　→　修改为：<strong>数据分析师</strong></div>
+      </div>
+      <br>
+      ⚠️ 身份修改会<strong>整体覆盖</strong>现有人设，确认继续吗？`;
+
+    appendAgentMsg(msgBox, 'SkyClaw · 智选模型', bubble);
+    scrollChat();
+    chatRound = 1;
+    chatBusy = false;
+    // 恢复输入区，等待用户确认
+    unlockInput(ta, '确认修改', '回复"确认"或告诉我哪里需要调整…');
+  });
+}
+
+// ── 第二轮：用户确认 → Agent 正式修改生效 ──
+function doRound2(userText) {
+  chatBusy = true;
+  const msgBox = document.getElementById('s4-messages');
+  const ta = document.getElementById('s4-input');
+
+  appendUserMsg(msgBox, userText);
+  lockInput(ta, '');
+  scrollChat();
+
+  agentTypingThen(msgBox, 800, 2200, () => {
+    const bubble = `
+      <div class="tool-call">
+        <span class="tc-icon">MCP 工具</span>
+        <span>write · identity.md</span>
+      </div>
+      设置已更新，改动如下：
+      <br><br>
+      <strong>昵称</strong>：SkyClaw → <strong>小甜甜</strong> ✓<br>
+      <strong>身份</strong>：产品经理 → <strong>数据分析师</strong> ✓
+      <br><br>
+      下次对话起以新身份运行。如需查看完整配置，可点击下方链接。
+      <br>
+      <span class="settings-link" onclick="gotoScreen('s1')">⚙️ 查看 SkyClaw 设置</span>`;
+
+    appendAgentMsg(msgBox, '小甜甜 · 智选模型', bubble);
+    scrollChat();
+
+    // 同步更新设置页昵称
+    savedName = '小甜甜';
+    const nameInput = document.getElementById('s1-name-input');
+    if (nameInput) nameInput.value = '小甜甜';
+
+    chatRound = 2;
+    chatBusy = false;
+    unlockInput(ta, '', '继续告诉我还需要修改什么…');
+  });
+}
+
+// ── helpers ──
+
+function appendUserMsg(box, text) {
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `
+    <div class="msg-av user-av">W</div>
+    <div class="msg-inner">
+      <div class="msg-name">Wendy</div>
+      <div class="msg-bubble">${escHtml(text)}</div>
+    </div>`;
+  box.appendChild(el);
+}
+
+function appendAgentMsg(box, agentName, bubbleHtml) {
+  const el = document.createElement('div');
+  el.className = 'msg agent';
+  el.innerHTML = `
+    <div class="msg-av">🤖</div>
+    <div class="msg-inner">
+      <div class="msg-name">${agentName}</div>
+      <div class="msg-bubble">${bubbleHtml}</div>
+    </div>`;
+  box.appendChild(el);
+}
+
+// 插入 typing 气泡，等 delay 后移除并执行 cb
+function agentTypingThen(box, typingDelay, replyDelay, cb) {
+  setTimeout(() => {
+    const typing = document.createElement('div');
+    typing.className = 'msg agent';
+    typing.innerHTML = `
+      <div class="msg-av">🤖</div>
+      <div class="msg-inner">
+        <div class="msg-name">SkyClaw · 智选模型</div>
+        <div class="msg-bubble">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+      </div>`;
+    box.appendChild(typing);
+    scrollChat();
+
+    setTimeout(() => {
+      typing.remove();
+      cb();
+    }, replyDelay);
+  }, typingDelay);
+}
+
+function lockInput(ta, placeholder) {
+  ta.value = '';
+  ta.disabled = true;
+  ta.placeholder = placeholder;
+  const btn = document.getElementById('s4-send-btn');
+  btn.classList.remove('active'); btn.classList.add('inactive');
+}
+
+function unlockInput(ta, prefill, placeholder) {
+  ta.disabled = false;
+  ta.value = prefill;
+  ta.placeholder = placeholder;
+  ta.style.height = 'auto';
+  const btn = document.getElementById('s4-send-btn');
+  const hasVal = prefill.length > 0;
+  btn.classList.toggle('active', hasVal);
+  btn.classList.toggle('inactive', !hasVal);
+}
+
+function scrollChat() {
+  const msgs = document.getElementById('s4-messages');
   if (msgs) msgs.scrollTop = msgs.scrollHeight;
 }
 
-// ─── 头像选择器开关 ──────────────────────────────
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+
+/* ════════════════════════════════════════════════
+   头像选择器
+════════════════════════════════════════════════ */
 function togglePicker(e, pickerId) {
   e.stopPropagation();
   const picker = document.getElementById(pickerId);
@@ -1033,11 +1199,15 @@ document.addEventListener('click', () => {
 document.querySelectorAll('.ap-option:not(.add)').forEach(opt => {
   opt.addEventListener('click', function(e) {
     e.stopPropagation();
-    this.closest('.ap-grid').querySelectorAll('.ap-option').forEach(o => o.classList.remove('sel'));
+    const grid = this.closest('.ap-grid');
+    grid.querySelectorAll('.ap-option').forEach(o => o.classList.remove('sel'));
     this.classList.add('sel');
-    const bigAv = this.closest('.avatar-wrap').querySelector('.avatar-circle');
-    bigAv.textContent = this.textContent;
-    bigAv.style.background = this.style.background;
+    const screen = this.dataset.screen;
+    const av = document.getElementById(screen + '-avatar');
+    if (av) {
+      av.textContent = this.textContent;
+      av.style.background = this.style.background;
+    }
     setTimeout(() => this.closest('.avatar-picker').classList.remove('open'), 300);
   });
 });
