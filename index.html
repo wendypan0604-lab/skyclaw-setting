@@ -444,6 +444,168 @@ body {
   min-height: 28px; display: flex; align-items: center;
 }
 
+/* ─── 个人中心·设置 双栏弹窗 ────────────────────── */
+.pc-modal {
+  background: white; border-radius: 16px;
+  width: 800px; max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 80px);
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+}
+.pc-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px 15px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
+}
+.pc-modal-title { font-size: 17px; font-weight: 700; }
+.pc-modal-body { display: flex; flex: 1; overflow: hidden; }
+
+/* 左侧导航 */
+.pc-nav {
+  width: 196px; border-right: 1px solid #f0f0f0;
+  padding: 10px 8px; flex-shrink: 0; overflow-y: auto;
+}
+.pc-nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 12px; border-radius: 8px;
+  font-size: 13px; color: #555; cursor: pointer; margin-bottom: 1px;
+  transition: background 0.12s;
+}
+.pc-nav-item:hover { background: #f5f5f5; }
+.pc-nav-item.active { background: #f0f0f0; color: #1a1a1a; font-weight: 500; }
+.pc-nav-item.danger { color: #d94f4f; margin-top: 12px; padding-top: 12px;
+  border-top: 1px solid #f0f0f0; border-radius: 0 0 8px 8px; }
+.pc-nav-icon { font-size: 14px; flex-shrink: 0; width: 18px; text-align: center; }
+.pc-nav-divider { height: 1px; background: #f0f0f0; margin: 8px 4px; }
+
+/* 右侧内容区 */
+.pc-content {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+}
+.pc-content-inner {
+  flex: 1; padding: 24px 28px; overflow-y: auto;
+}
+.pc-content-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.pc-content-label { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+
+/* 记忆内容（复用 memory-content 样式，在此区域额外限高滚动） */
+.pc-memory-scroll { overflow-y: auto; flex: 1; }
+
+/* 右侧底部 footer（编辑输入区，同 s2） */
+.pc-footer {
+  border-top: 1px solid #f0f0f0; padding: 14px 20px;
+  flex-shrink: 0; background: white; display: none;
+}
+.pc-footer.visible { display: block; }
+
+/* ─── 导入记忆弹窗 ───────────────────────────────── */
+.import-overlay {
+  position: fixed; inset: 36px 0 0 0;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 400; /* 覆盖在 SkyClaw 弹窗之上 */
+}
+.import-modal {
+  background: white; border-radius: 20px;
+  width: 620px; max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 80px);
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.22);
+}
+.import-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 28px 28px 20px;
+}
+.import-title { font-size: 22px; font-weight: 700; color: #1a1a1a; line-height: 1.3; }
+.import-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #f5f5f5; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #888; font-size: 16px; flex-shrink: 0; margin-top: 2px;
+  transition: background 0.15s;
+}
+.import-close:hover { background: #eee; color: #333; }
+
+.import-body { padding: 0 28px 24px; overflow-y: auto; flex: 1; }
+
+/* 步骤行 */
+.import-step { display: flex; gap: 14px; margin-bottom: 20px; }
+.import-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #1a1a1a; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.import-step-content { flex: 1; }
+.import-step-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; }
+
+/* 步骤1：提示词文本框 */
+.import-prompt-box {
+  background: #f5f5f5; border-radius: 12px;
+  padding: 16px; position: relative; max-height: 168px; overflow: hidden;
+}
+.import-prompt-text {
+  font-size: 13px; color: #444; line-height: 1.75;
+  max-height: 130px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+.import-copy-btn {
+  position: absolute; right: 10px; bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+  background: white; border: 1px solid #e0e0e0; border-radius: 8px;
+  padding: 6px 14px; font-size: 13px; color: #333; cursor: pointer;
+  font-family: inherit; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.15s;
+}
+.import-copy-btn:hover { background: #f8f8f8; }
+.import-copy-btn.copied { color: #16a34a; border-color: #86efac; background: #f0fdf4; }
+
+/* 步骤2：粘贴区 */
+.import-paste-box {
+  border: 1.5px solid #e0e0e0; border-radius: 12px;
+  padding: 14px 16px; min-height: 130px; background: #fafafa;
+  transition: border-color 0.15s;
+}
+.import-paste-box:focus-within { border-color: #1a1a1a; background: white; }
+.import-textarea {
+  width: 100%; border: none; outline: none; resize: none;
+  font-size: 13px; color: #333; font-family: inherit;
+  background: transparent; min-height: 104px; line-height: 1.65;
+}
+.import-textarea::placeholder { color: #bbb; }
+
+/* Footer */
+.import-footer {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 16px 28px 24px; flex-shrink: 0;
+}
+.import-cancel-btn {
+  padding: 10px 22px; border: 1.5px solid #e0e0e0; border-radius: 10px;
+  background: white; font-size: 14px; color: #444; cursor: pointer;
+  font-family: inherit; font-weight: 500; transition: all 0.15s;
+}
+.import-cancel-btn:hover { background: #f5f5f5; }
+.import-add-btn {
+  padding: 10px 24px; border: none; border-radius: 10px;
+  background: #1a1a1a; font-size: 14px; color: white; cursor: pointer;
+  font-family: inherit; font-weight: 600; transition: all 0.15s;
+}
+.import-add-btn:hover { background: #333; }
+.import-add-btn:disabled { background: #ccc; cursor: not-allowed; }
+.import-add-btn.loading { background: #555; cursor: not-allowed; }
+
+/* 导入按钮（空状态里的次要按钮） */
+.import-entry-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border: 1.5px solid #e0e0e0; border-radius: 8px;
+  background: white; font-size: 13px; color: #555; cursor: pointer;
+  font-family: inherit; margin-top: 10px; transition: all 0.15s;
+}
+.import-entry-btn:hover { border-color: #bbb; color: #333; background: #fafafa; }
+
 /* ─── 保存成功 toast ─────────────────────────────── */
 .toast {
   position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
@@ -482,6 +644,7 @@ body {
   <button id="btn-s2" onclick="gotoScreen('s2')">② 记忆 tab（查看/编辑）</button>
   <button id="btn-s3" onclick="gotoScreen('s3')">③ 记忆为空（新用户）</button>
   <button id="btn-s4" onclick="gotoScreen('s4')">④ 对话编辑设置</button>
+  <button id="btn-s5" onclick="gotoScreen('s5')">⑤ 个人中心·记忆入口</button>
 </div>
 
 <div id="app">
@@ -637,7 +800,7 @@ body {
             <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
             </svg>
-            <span id="s2-edit-btn-label">编辑记忆</span>
+            <span id="s2-edit-btn-label">让 Agent 记住</span>
           </button>
           <button class="close-btn" id="s2-close-btn" onclick="resetMemoryEdit()">✕</button>
         </div>
@@ -683,11 +846,12 @@ body {
 
         <!-- 状态 A：输入框（默认） -->
         <div id="s2-input-state">
+          <div style="font-size:12px;font-weight:600;color:#999;margin-bottom:8px;letter-spacing:0.2px;">告诉 Agent 需要记住什么</div>
           <div class="memory-input-wrap">
             <textarea
               class="memory-textarea"
               id="s2-memory-textarea"
-              placeholder="告诉我你想添加、修改或删除的记忆内容…"
+              placeholder="例如：删掉飞书日记那条 · 我不喜欢用 Slack · 记住我习惯番茄工作法…"
               rows="1"
               oninput="onMemoryInput()"
               onkeydown="onMemoryKeydown(event)"
@@ -758,7 +922,7 @@ body {
             <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
             </svg>
-            编辑记忆
+            让 Agent 记住
           </button>
           <button class="close-btn">✕</button>
         </div>
@@ -771,10 +935,81 @@ body {
             记忆来自对话中体现出的稳定偏好和习惯，持续和 SkyClaw 交流，它会把值得记住的事沉淀下来。
           </div>
           <button class="empty-cta">去对话</button>
+          <button class="import-entry-btn" onclick="openImportModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/>
+            </svg>
+            导入其他平台记忆
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 导入记忆弹窗（z-index 覆盖在 SkyClaw 弹窗之上） -->
+  <div class="import-overlay" id="s3-import-overlay"
+       style="display:none" onclick="closeImportModal()">
+    <div class="import-modal" onclick="event.stopPropagation()">
+
+      <div class="import-header">
+        <div class="import-title">导入其他平台记忆</div>
+        <button class="import-close" onclick="closeImportModal()">✕</button>
+      </div>
+
+      <div class="import-body">
+
+        <!-- 步骤 1 -->
+        <div class="import-step">
+          <div class="import-step-num">1</div>
+          <div class="import-step-content">
+            <div class="import-step-title">将以下提示词发送给你在用的其他 AI</div>
+            <div class="import-prompt-box">
+              <div class="import-prompt-text" id="s3-prompt-text">导出你存储的所有关于我的记忆，以及你从过去对话中了解到的任何信息。请尽量保留我的原始表达方式，尤其是指令和偏好相关的内容。
+
+## 输出分类（按以下顺序）：
+- 用户基本信息（姓名、职业、时区等）
+- 回复风格偏好
+- 工作方式偏好
+- 项目和任务背景
+- 其他需要记住的事项
+
+每条记忆请说明来源对话的大致背景。</div>
+              <button class="import-copy-btn" id="s3-copy-btn" onclick="copyPrompt()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                </svg>
+                <span id="s3-copy-label">复制</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 步骤 2 -->
+        <div class="import-step">
+          <div class="import-step-num">2</div>
+          <div class="import-step-content">
+            <div class="import-step-title">将 AI 的回复粘贴到下方</div>
+            <div class="import-paste-box">
+              <textarea
+                class="import-textarea"
+                id="s3-paste-area"
+                placeholder="在此粘贴记忆内容…"
+                oninput="onPasteInput()"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="import-footer">
+        <button class="import-cancel-btn" onclick="closeImportModal()">取消</button>
+        <button class="import-add-btn" id="s3-add-btn" disabled onclick="doImport()">导入记忆</button>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 
@@ -829,6 +1064,179 @@ body {
   </div>
 </div>
 
+
+<!-- ============================================================
+     SCREEN 5：个人中心 · 设置 — 记忆入口
+============================================================ -->
+<div class="screen" id="s5">
+  <!-- 背景（模糊） -->
+  <div class="sw-bg" style="filter:blur(2px) brightness(0.93);pointer-events:none;user-select:none">
+    <div class="sw-sidebar">
+      <div class="sw-logo"><div class="sw-logo-icon">S</div><span class="sw-logo-text">Skywork</span></div>
+      <div class="sw-nav-item active">🏠 首页</div>
+      <div class="sw-nav-item">➕ 新建项目</div>
+      <div class="sw-nav-item">🔮 探索技能</div>
+    </div>
+    <div class="sw-main">
+      <div class="sc-greeting">
+        <div class="sc-av">🤖</div>
+        <h2>Hi，我是SkyClaw</h2>
+        <h1>随时随地，帮你高效完成任务</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗遮罩 -->
+  <div class="modal-overlay">
+    <div class="pc-modal" onclick="event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="pc-modal-header">
+        <span class="pc-modal-title">设置</span>
+        <button class="close-btn">✕</button>
+      </div>
+
+      <!-- Body：左导航 + 右内容 -->
+      <div class="pc-modal-body">
+
+        <!-- 左侧导航 -->
+        <div class="pc-nav">
+          <div class="pc-nav-item" onclick="s5SetTab('profile')">
+            <span class="pc-nav-icon">👤</span> 个人资料
+          </div>
+          <div class="pc-nav-item active" id="s5-nav-memory" onclick="s5SetTab('memory')">
+            <span class="pc-nav-icon">🧠</span> 记忆
+          </div>
+          <div class="pc-nav-item" onclick="s5SetTab('prompts')">
+            <span class="pc-nav-icon">💬</span> 我的预设提示词
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">🔔</span> 邮件通知
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">🎨</span> 外观
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon" style="font-size:12px;font-weight:700">zh</span> 语言
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">👥</span> 接管设置
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">🔑</span> API 密钥
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">🌐</span> Skywork浏览器
+          </div>
+          <div class="pc-nav-item">
+            <span class="pc-nav-icon">💎</span> 订阅
+          </div>
+          <div class="pc-nav-divider"></div>
+          <div class="pc-nav-item danger">
+            <span class="pc-nav-icon">👤</span> 删除账户
+          </div>
+        </div>
+
+        <!-- 右侧内容 -->
+        <div class="pc-content">
+          <!-- 记忆内容区 -->
+          <div class="pc-content-inner" id="s5-content-inner">
+            <div class="pc-content-topbar">
+              <span class="pc-content-label">记忆</span>
+              <button class="edit-btn" id="s5-edit-btn" onclick="s5ToggleEdit()">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 2l3 3-9 9H2v-3l9-9z"/>
+                </svg>
+                <span id="s5-edit-label">让 Agent 记住</span>
+              </button>
+            </div>
+
+            <div class="memory-content">
+              <h2>用户基本信息</h2>
+              <ul>
+                <li>姓名：Wendy，AI 产品经理</li>
+                <li>时区：北京时间（UTC+8），代码中需做时区转换</li>
+              </ul>
+
+              <h2>回复风格</h2>
+              <ul>
+                <li>简洁为主，不滥用 emoji</li>
+                <li>不确定时先询问，不擅自假设</li>
+                <li class="kv">Why：用户明确指定偏好</li>
+                <li class="kv">How to apply：所有对话默认遵守</li>
+              </ul>
+
+              <h2>飞书日记任务</h2>
+              <ul>
+                <li>触发时间：每天 22:00（北京时间）</li>
+                <li>写入方式：插入文档最顶部（index: 0），最新条目始终在最上方</li>
+                <li>日记结构：H1 为日期标题，H2 今日总结，最后加分割线</li>
+                <li>特殊规则：当天无对话或无重要事项时，内容设为「今日日记内容为空」</li>
+                <li class="kv">How to apply：执行日记写入任务时严格遵守格式与写入位置</li>
+              </ul>
+
+              <h2>工作方式偏好</h2>
+              <ul>
+                <li>动核心逻辑（改 SQL 分区、改 PRD 主流程、删文件）前先确认一次</li>
+                <li>写代码时带必要的中文注释，遇到新概念简单解释原理</li>
+                <li>不要每次都从零科普已掌握的知识点</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 底部编辑输入区（默认隐藏，样式完全复用 s2） -->
+          <div class="pc-footer" id="s5-footer">
+
+            <!-- 输入态 -->
+            <div id="s5-input-state">
+              <div style="font-size:12px;font-weight:600;color:#999;margin-bottom:8px;letter-spacing:0.2px;">告诉 Agent 需要记住什么</div>
+              <div class="memory-input-wrap">
+                <textarea
+                  class="memory-textarea"
+                  id="s5-textarea"
+                  placeholder="例如：删掉飞书日记那条 · 我不喜欢用 Slack · 记住我习惯番茄工作法…"
+                  rows="1"
+                  oninput="s5OnInput()"
+                  onkeydown="s5OnKeydown(event)"
+                ></textarea>
+                <div class="memory-input-bottom">
+                  <span class="memory-input-hint">Enter 发送 · Shift+Enter 换行</span>
+                  <button class="mem-send-btn inactive" id="s5-send-btn" onclick="s5Send()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading 态 -->
+            <div id="s5-loading-state" style="display:none">
+              <div class="memory-loading-wrap">
+                <div class="typing-dots"><span></span><span></span><span></span></div>
+                <span class="memory-loading-text">正在更新记忆…</span>
+              </div>
+            </div>
+
+            <!-- 成功态 -->
+            <div id="s5-success-state" style="display:none">
+              <div class="memory-success-wrap">
+                <div class="success-icon">✓</div>
+                <div>
+                  <div class="success-text">记忆已更新</div>
+                  <div class="success-sub">下次对话开始时生效</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- pc-footer -->
+        </div><!-- pc-content -->
+
+      </div><!-- pc-modal-body -->
+    </div><!-- pc-modal -->
+  </div><!-- modal-overlay -->
+</div><!-- screen s5 -->
+
 </div><!-- #app -->
 
 <script>
@@ -842,6 +1250,8 @@ function gotoScreen(id) {
 
   // 切换到记忆 tab 时重置记忆编辑状态
   if (id === 's2') resetMemoryEdit();
+  // 切换到个人中心记忆页时重置
+  if (id === 's5' && typeof s5ResetEdit === 'function') s5ResetEdit();
   // 切换到对话页时重置对话状态
   if (id === 's4') {
     chatRound = 0; chatBusy = false;
@@ -925,7 +1335,7 @@ function toggleMemoryEdit() {
 function resetMemoryEdit() {
   memoryEditOpen = false;
   document.getElementById('s2-footer').classList.remove('visible');
-  document.getElementById('s2-edit-btn-label').textContent = '编辑记忆';
+  document.getElementById('s2-edit-btn-label').textContent = '让 Agent 记住';
   document.getElementById('s2-edit-btn').style.opacity = '1';
   document.getElementById('s2-edit-btn').style.pointerEvents = 'auto';
   setMemoryFooterState('input');
@@ -1182,6 +1592,134 @@ function escHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
 }
 
+
+/* ════════════════════════════════════════════════
+   导入记忆弹窗逻辑（s3 空状态）
+════════════════════════════════════════════════ */
+
+function openImportModal() {
+  document.getElementById('s3-import-overlay').style.display = 'flex';
+  // 重置状态
+  document.getElementById('s3-paste-area').value = '';
+  document.getElementById('s3-add-btn').disabled = true;
+  document.getElementById('s3-add-btn').textContent = '导入记忆';
+  document.getElementById('s3-add-btn').classList.remove('loading');
+  const copyBtn = document.getElementById('s3-copy-btn');
+  copyBtn.classList.remove('copied');
+  document.getElementById('s3-copy-label').textContent = '复制';
+}
+
+function closeImportModal() {
+  document.getElementById('s3-import-overlay').style.display = 'none';
+}
+
+function copyPrompt() {
+  const text = document.getElementById('s3-prompt-text').innerText;
+  navigator.clipboard.writeText(text).catch(() => {});
+  const btn = document.getElementById('s3-copy-btn');
+  const label = document.getElementById('s3-copy-label');
+  btn.classList.add('copied');
+  label.textContent = '已复制';
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    label.textContent = '复制';
+  }, 2000);
+}
+
+function onPasteInput() {
+  const val = document.getElementById('s3-paste-area').value.trim();
+  document.getElementById('s3-add-btn').disabled = val.length === 0;
+}
+
+function doImport() {
+  const btn = document.getElementById('s3-add-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = '导入中…';
+
+  setTimeout(() => {
+    // 导入成功：关闭导入弹窗，跳转到有内容的记忆页
+    closeImportModal();
+    gotoScreen('s2');
+  }, 1800);
+}
+
+/* ════════════════════════════════════════════════
+   个人中心（s5）记忆编辑逻辑
+   交互完全对齐 s2 的记忆编辑
+════════════════════════════════════════════════ */
+
+let s5EditOpen = false;
+
+// 左导航切换（仅记忆有内容，其他 tab 暂不实现）
+function s5SetTab(tab) {
+  document.querySelectorAll('#s5 .pc-nav-item').forEach(el => el.classList.remove('active'));
+  if (tab === 'memory') {
+    document.getElementById('s5-nav-memory').classList.add('active');
+    document.getElementById('s5-content-inner').style.display = 'flex';
+    document.getElementById('s5-content-inner').style.flexDirection = 'column';
+  }
+  // 其他 tab 可扩展
+}
+
+// 点「编辑记忆」/ 「完成」
+function s5ToggleEdit() {
+  if (s5EditOpen) {
+    s5ResetEdit();
+  } else {
+    s5EditOpen = true;
+    document.getElementById('s5-footer').classList.add('visible');
+    document.getElementById('s5-edit-label').textContent = '完成';
+    s5SetFooterState('input');
+    setTimeout(() => document.getElementById('s5-textarea').focus(), 50);
+  }
+}
+
+// 重置编辑区
+function s5ResetEdit() {
+  s5EditOpen = false;
+  document.getElementById('s5-footer').classList.remove('visible');
+  document.getElementById('s5-edit-label').textContent = '让 Agent 记住';
+  document.getElementById('s5-edit-btn').style.opacity = '1';
+  document.getElementById('s5-edit-btn').style.pointerEvents = 'auto';
+  s5SetFooterState('input');
+  const ta = document.getElementById('s5-textarea');
+  ta.value = ''; ta.style.height = 'auto';
+  const btn = document.getElementById('s5-send-btn');
+  btn.classList.remove('active'); btn.classList.add('inactive');
+}
+
+function s5SetFooterState(state) {
+  document.getElementById('s5-input-state').style.display   = state === 'input'   ? 'block' : 'none';
+  document.getElementById('s5-loading-state').style.display = state === 'loading' ? 'block' : 'none';
+  document.getElementById('s5-success-state').style.display = state === 'success' ? 'block' : 'none';
+}
+
+function s5OnInput() {
+  const ta = document.getElementById('s5-textarea');
+  const btn = document.getElementById('s5-send-btn');
+  const val = ta.value.trim();
+  btn.classList.toggle('active', val.length > 0);
+  btn.classList.toggle('inactive', val.length === 0);
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
+}
+
+function s5OnKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); s5Send(); }
+}
+
+function s5Send() {
+  const val = document.getElementById('s5-textarea').value.trim();
+  if (!val) return;
+  document.getElementById('s5-edit-btn').style.opacity = '0.5';
+  document.getElementById('s5-edit-btn').style.pointerEvents = 'none';
+  s5SetFooterState('loading');
+  setTimeout(() => {
+    s5SetFooterState('success');
+    setTimeout(() => s5ResetEdit(), 2000);
+  }, 1800);
+}
 
 /* ════════════════════════════════════════════════
    头像选择器
